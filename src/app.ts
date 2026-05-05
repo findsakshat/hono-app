@@ -1,19 +1,28 @@
 import { Hono } from "hono";
+import { HTTPException } from "hono/http-exception";
+import { trimTrailingSlash } from "hono/trailing-slash";
+import { routes } from "./routes";
 
-export class App {
-  private app: Hono;
+const app = new Hono();
 
-  constructor() {
-    this.app = new Hono();
-    this.registerRoutes();
+app.use(trimTrailingSlash());
+
+routes.forEach(({ path, router }) => {
+  app.basePath("/api").route(path, router);
+});
+
+app.get("/api/health", (c) => {
+  return c.json({ message: "Healthy 🔥" }, 200);
+});
+
+app.onError((error, c) => {
+  if (error instanceof HTTPException) {
+    return c.json({ message: error.message }, error.status);
   }
 
-  private registerRoutes() {}
+  // oxlint-disable-next-line no-console
+  console.error("Error::", error);
+  return c.json({ message: "Internal server error" }, 500);
+});
 
-  public serve() {
-    return Bun.serve({
-      port: process.env.PORT ?? 8080,
-      fetch: this.app.fetch,
-    });
-  }
-}
+export { app };
