@@ -6,4 +6,4 @@ const server = Bun.serve({
 });
 
 // oxlint-disable-next-line no-console
-console.log(`🟢 Server is up and running on ${server.url}`);
+console.log(`🟢 Server is up and running on:`, server.url.href);

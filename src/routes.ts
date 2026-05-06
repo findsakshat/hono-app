@@ -1,11 +1,11 @@
 import type { Hono } from "hono";
-import { usersRouter } from "./modules/users/users.router";
+import { postsRouter } from "./modules/posts/posts.router";
 
 type RouteConfig = {
   path: string;
   router: Hono;
 };
 
-const routes: RouteConfig[] = [{ path: "/users", router: usersRouter }];
+const routes: RouteConfig[] = [{ path: "/posts", router: postsRouter }];
 
 export { routes };
