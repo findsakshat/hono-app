@@ -1,5 +1,4 @@
-import { HTTPException } from "hono/http-exception";
-import type { ContentfulStatusCode } from "hono/utils/http-status";
+import { AppHTTPException } from "../../utils/app-http-exception";
 
 const API_BASE_URL = "https://jsonplaceholder.typicode.com";
 
@@ -7,8 +6,9 @@ async function fetchPosts() {
   const response = await fetch(`${API_BASE_URL}/posts`);
 
   if (!response.ok) {
-    const status = response.status as ContentfulStatusCode;
-    throw new HTTPException(status, { message: response.statusText });
+    throw new AppHTTPException(response.status, {
+      message: "Something went wrong",
+    });
   }
 
   const data = await response.json();
@@ -20,8 +20,9 @@ async function fetchPostById(id: string) {
   const response = await fetch(`${API_BASE_URL}/posts/${id}`);
 
   if (!response.ok) {
-    const status = response.status as ContentfulStatusCode;
-    throw new HTTPException(status, { message: response.statusText });
+    throw new AppHTTPException(response.status, {
+      message: "Something went wrong",
+    });
   }
 
   const data = await response.json();
@@ -49,8 +50,9 @@ async function createPostByUserId({ userId, title, body }: CreatePostPayload) {
   });
 
   if (!response.ok) {
-    const status = response.status as ContentfulStatusCode;
-    throw new HTTPException(status, { message: response.statusText });
+    throw new AppHTTPException(response.status, {
+      message: "Something went wrong",
+    });
   }
 
   const data = await response.json();

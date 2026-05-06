@@ -1,7 +1,7 @@
 import { Hono } from "hono";
-import { HTTPException } from "hono/http-exception";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { routes } from "./routes";
+import { AppHTTPException } from "./utils/app-http-exception";
 
 const app = new Hono();
 
@@ -16,13 +16,28 @@ app.get("/api/health", (c) => {
 });
 
 app.onError((error, c) => {
-  if (error instanceof HTTPException) {
-    return c.json({ message: error.message }, error.status);
+  if (error instanceof AppHTTPException) {
+    return c.json(
+      {
+        statusText: error.statusText,
+        success: error.success,
+        message: error.message,
+        data: error.data,
+      },
+      error.status,
+    );
   }
 
   // oxlint-disable-next-line no-console
   console.error("Error::", error);
-  return c.json({ message: "Internal server error" }, 500);
+  return c.json(
+    {
+      success: false,
+      statusText: "Internal Server Error",
+      message: "Something went wrong",
+    },
+    500,
+  );
 });
 
 export { app };

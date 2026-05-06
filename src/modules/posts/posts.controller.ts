@@ -1,6 +1,6 @@
 import type { Context } from "hono";
 import * as PostsService from "./posts.service";
-import { HTTPException } from "hono/http-exception";
+import { AppHTTPException } from "../../utils/app-http-exception";
 
 async function getPosts(c: Context) {
   const posts = await PostsService.fetchPosts();
@@ -15,7 +15,7 @@ async function getPost(c: Context) {
   const id = c.req.param("id");
 
   if (!id) {
-    throw new HTTPException(400, { message: "Provide a valid post id" });
+    throw new AppHTTPException(400, { message: "Provide a valid post id" });
   }
 
   const post = await PostsService.fetchPostById(id);
@@ -27,7 +27,9 @@ async function createPost(c: Context) {
   const { userId, title, body } = await c.req.json();
 
   if (!userId || !title || !body) {
-    throw new HTTPException(400, { message: "Bad Request" });
+    throw new AppHTTPException(400, {
+      message: "Provide all the required fields",
+    });
   }
 
   const post = await PostsService.createPostByUserId({
