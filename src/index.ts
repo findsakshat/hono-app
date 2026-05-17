@@ -1,8 +1,8 @@
 import { app } from "./app";
 
 const server = Bun.serve({
-  port: process.env.PORT ?? 8080,
-  fetch: app.fetch,
+	port: process.env.PORT ?? 8080,
+	fetch: app.fetch,
 });
 
 // oxlint-disable-next-line no-console

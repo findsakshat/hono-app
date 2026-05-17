@@ -1,11 +1,11 @@
 import { Hono } from "hono";
-import * as PostsController from "./posts.controller";
+import * as controller from "./posts.controller";
 
 const router = new Hono();
 
-router.get("/", PostsController.getPosts);
-router.get("/:id", PostsController.getPost);
+router.get("/", controller.getPosts);
+router.get("/:id", controller.getPost);
 
-router.post("/", PostsController.createPost);
+router.post("/", controller.createPost);
 
 export { router as postsRouter };
